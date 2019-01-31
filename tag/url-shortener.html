@@ -2,194 +2,46 @@
 <html lang="en">
 <head>
         <meta charset="utf-8" />
-        <title>Rakesh Singh @ Github - url shortener</title>
-        <link rel="stylesheet" href="/theme/css/main.css" />
-
-        <!--[if IE]>
-            <script src="https://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-        <![endif]-->
+        <title>Tan Man Dhan - url shortener</title>
+        <link rel="stylesheet" href="https://tan-man-dhan.com/theme/css/main.css" />
 </head>
 
 <body id="index" class="home">
         <header id="banner" class="body">
-                <h1><a href="/">Rakesh Singh @ Github </a></h1>
+                <h1><a href="https://tan-man-dhan.com/">Tan Man Dhan <strong>a healthy relationship with your finances</strong></a></h1>
                 <nav><ul>
-                    <li><a href="/category/general.html">General</a></li>
-                    <li><a href="/category/tech.html">Tech</a></li>
+                    <li><a href="https://tan-man-dhan.com/pages/about.html">About</a></li>
+                    <li><a href="https://tan-man-dhan.com/pages/contact.html">Contact</a></li>
+                    <li><a href="https://tan-man-dhan.com/category/investing.html">Investing</a></li>
                 </ul></nav>
         </header><!-- /#banner -->
 
             <aside id="featured" class="body">
                 <article>
-                    <h1 class="entry-title"><a href="/java-code-for-url-shortener.html">Java Code URL Shortner</a></h1>
+                    <h1 class="entry-title"><a href="https://tan-man-dhan.com/lets-start-with-basics.html">Lets start with basics</a></h1>
 <footer class="post-info">
-        <abbr class="published" title="2018-08-03T00:20:00-07:00">
-                Published: Fri 03 August 2018
+        <abbr class="published" title="2019-08-03T00:20:00-07:00">
+                Published: Sat 03 August 2019
         </abbr>
 
         <address class="vcard author">
-                By                         <a class="url fn" href="/author/rakesh-singh.html">Rakesh Singh</a>
+                By                         <a class="url fn" href="https://tan-man-dhan.com/author/rakesh-singh.html">Rakesh Singh</a>
         </address>
-<p>In <a href="/category/tech.html">Tech</a>.</p>
-<p>tags: <a href="/tag/coding.html">coding</a> <a href="/tag/java.html">java</a> <a href="/tag/url-shortener.html">url shortener</a> </p>
-</footer><!-- /.post-info --><p>Wrote this code some time back for a programming interview, sharing it for everyone's use.
-Its a 64 character encoded URL shortener code written in java. The code does not use any database backend but can be easily modified to support that.</p>
-<div class="highlight"><pre><span></span><span class="kn">package</span> <span class="nn">testjava</span><span class="o">;</span>
-
-<span class="kn">import</span> <span class="nn">java.util.HashMap</span><span class="o">;</span>
-<span class="kn">import</span> <span class="nn">java.util.Random</span><span class="o">;</span>
-
-<span class="cm">/*</span>
-<span class="cm"> * URL Shortener</span>
-<span class="cm"> */</span>
-<span class="kd">public</span> <span class="kd">class</span> <span class="nc">URLShortener</span> <span class="o">{</span>
-    <span class="c1">// storage for generated keys</span>
-    <span class="kd">private</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">keyMap</span><span class="o">;</span> <span class="c1">// key-url map</span>
-    <span class="kd">private</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;</span> <span class="n">valueMap</span><span class="o">;</span><span class="c1">// url-key map to quickly check</span>
-                                                <span class="c1">// whether an url is</span>
-    <span class="c1">// already entered in our system</span>
-    <span class="kd">private</span> <span class="n">String</span> <span class="n">domain</span><span class="o">;</span> <span class="c1">// Use this attribute to generate urls for a custom</span>
-                            <span class="c1">// domain name defaults to http://fkt.in</span>
-    <span class="kd">private</span> <span class="kt">char</span> <span class="n">myChars</span><span class="o">[];</span> <span class="c1">// This array is used for character to number</span>
-                            <span class="c1">// mapping</span>
-    <span class="kd">private</span> <span class="n">Random</span> <span class="n">myRand</span><span class="o">;</span> <span class="c1">// Random object used to generate random integers</span>
-    <span class="kd">private</span> <span class="kt">int</span> <span class="n">keyLength</span><span class="o">;</span> <span class="c1">// the key length in URL defaults to 8</span>
-
-    <span class="c1">// Default Constructor</span>
-    <span class="n">URLShortener</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">keyMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;();</span>
-        <span class="n">valueMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">String</span><span class="o">&gt;();</span>
-        <span class="n">myRand</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Random</span><span class="o">();</span>
-        <span class="n">keyLength</span> <span class="o">=</span> <span class="mi">8</span><span class="o">;</span>
-        <span class="n">myChars</span> <span class="o">=</span> <span class="k">new</span> <span class="kt">char</span><span class="o">[</span><span class="mi">62</span><span class="o">];</span>
-        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="mi">62</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-            <span class="kt">int</span> <span class="n">j</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&lt;</span> <span class="mi">10</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">48</span><span class="o">;</span>
-            <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">i</span> <span class="o">&gt;</span> <span class="mi">9</span> <span class="o">&amp;&amp;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="mi">35</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">55</span><span class="o">;</span>
-            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-                <span class="n">j</span> <span class="o">=</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">61</span><span class="o">;</span>
-            <span class="o">}</span>
-            <span class="n">myChars</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="o">(</span><span class="kt">char</span><span class="o">)</span> <span class="n">j</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="n">domain</span> <span class="o">=</span> <span class="s">&quot;http://fkt.in&quot;</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="c1">// Constructor which enables you to define tiny URL key length and base URL</span>
-    <span class="c1">// name</span>
-    <span class="n">URLShortener</span><span class="o">(</span><span class="kt">int</span> <span class="n">length</span><span class="o">,</span> <span class="n">String</span> <span class="n">newDomain</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">this</span><span class="o">();</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">keyLength</span> <span class="o">=</span> <span class="n">length</span><span class="o">;</span>
-        <span class="k">if</span> <span class="o">(!</span><span class="n">newDomain</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
-            <span class="n">newDomain</span> <span class="o">=</span> <span class="n">sanitizeURL</span><span class="o">(</span><span class="n">newDomain</span><span class="o">);</span>
-            <span class="n">domain</span> <span class="o">=</span> <span class="n">newDomain</span><span class="o">;</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-
-    <span class="c1">// shortenURL</span>
-    <span class="c1">// the public method which can be called to shorten a given URL</span>
-    <span class="kd">public</span> <span class="n">String</span> <span class="nf">shortenURL</span><span class="o">(</span><span class="n">String</span> <span class="n">longURL</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">String</span> <span class="n">shortURL</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">validateURL</span><span class="o">(</span><span class="n">longURL</span><span class="o">))</span> <span class="o">{</span>
-            <span class="n">longURL</span> <span class="o">=</span> <span class="n">sanitizeURL</span><span class="o">(</span><span class="n">longURL</span><span class="o">);</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">valueMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">longURL</span><span class="o">))</span> <span class="o">{</span>
-                <span class="n">shortURL</span> <span class="o">=</span> <span class="n">domain</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="n">valueMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">longURL</span><span class="o">);</span>
-            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-                <span class="n">shortURL</span> <span class="o">=</span> <span class="n">domain</span> <span class="o">+</span> <span class="s">&quot;/&quot;</span> <span class="o">+</span> <span class="n">getKey</span><span class="o">(</span><span class="n">longURL</span><span class="o">);</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-        <span class="c1">// add http part</span>
-        <span class="k">return</span> <span class="n">shortURL</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="c1">// expandURL</span>
-    <span class="c1">// public method which returns back the original URL given the shortened url</span>
-    <span class="kd">public</span> <span class="n">String</span> <span class="nf">expandURL</span><span class="o">(</span><span class="n">String</span> <span class="n">shortURL</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">String</span> <span class="n">longURL</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
-        <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="n">shortURL</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">domain</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">+</span> <span class="mi">1</span><span class="o">);</span>
-        <span class="n">longURL</span> <span class="o">=</span> <span class="n">keyMap</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">key</span><span class="o">);</span>
-        <span class="k">return</span> <span class="n">longURL</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="c1">// Validate URL</span>
-    <span class="c1">// not implemented, but should be implemented to check whether the given URL</span>
-    <span class="c1">// is valid or not</span>
-    <span class="kt">boolean</span> <span class="nf">validateURL</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="c1">// sanitizeURL</span>
-    <span class="c1">// This method should take care various issues with a valid url</span>
-    <span class="c1">// e.g. www.google.com,www.google.com/, http://www.google.com,</span>
-    <span class="c1">// http://www.google.com/</span>
-    <span class="c1">// all the above URL should point to same shortened URL</span>
-    <span class="c1">// There could be several other cases like these.</span>
-    <span class="n">String</span> <span class="nf">sanitizeURL</span><span class="o">(</span><span class="n">String</span> <span class="n">url</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">url</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">7</span><span class="o">).</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;http://&quot;</span><span class="o">))</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">7</span><span class="o">);</span>
-
-        <span class="k">if</span> <span class="o">(</span><span class="n">url</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">8</span><span class="o">).</span><span class="na">equals</span><span class="o">(</span><span class="s">&quot;https://&quot;</span><span class="o">))</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">8</span><span class="o">);</span>
-
-        <span class="k">if</span> <span class="o">(</span><span class="n">url</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">url</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39;/&#39;</span><span class="o">)</span>
-            <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">url</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">-</span> <span class="mi">1</span><span class="o">);</span>
-        <span class="k">return</span> <span class="n">url</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="cm">/*</span>
-<span class="cm">     * Get Key method</span>
-<span class="cm">     */</span>
-    <span class="kd">private</span> <span class="n">String</span> <span class="nf">getKey</span><span class="o">(</span><span class="n">String</span> <span class="n">longURL</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">String</span> <span class="n">key</span><span class="o">;</span>
-        <span class="n">key</span> <span class="o">=</span> <span class="n">generateKey</span><span class="o">();</span>
-        <span class="n">keyMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">longURL</span><span class="o">);</span>
-        <span class="n">valueMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">longURL</span><span class="o">,</span> <span class="n">key</span><span class="o">);</span>
-        <span class="k">return</span> <span class="n">key</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="c1">// generateKey</span>
-    <span class="kd">private</span> <span class="n">String</span> <span class="nf">generateKey</span><span class="o">()</span> <span class="o">{</span>
-        <span class="n">String</span> <span class="n">key</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
-        <span class="kt">boolean</span> <span class="n">flag</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
-        <span class="k">while</span> <span class="o">(</span><span class="n">flag</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="s">&quot;&quot;</span><span class="o">;</span>
-            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;=</span> <span class="n">keyLength</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-                <span class="n">key</span> <span class="o">+=</span> <span class="n">myChars</span><span class="o">[</span><span class="n">myRand</span><span class="o">.</span><span class="na">nextInt</span><span class="o">(</span><span class="mi">62</span><span class="o">)];</span>
-            <span class="o">}</span>
-            <span class="c1">// System.out.println(&quot;Iteration: &quot;+ counter + &quot;Key: &quot;+ key);</span>
-            <span class="k">if</span> <span class="o">(!</span><span class="n">keyMap</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
-                <span class="n">flag</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="n">key</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="c1">// test the code</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span> <span class="n">args</span><span class="o">[])</span> <span class="o">{</span>
-        <span class="n">URLShortener</span> <span class="n">u</span> <span class="o">=</span> <span class="k">new</span> <span class="n">URLShortener</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="s">&quot;www.tinyurl.com/&quot;</span><span class="o">);</span>
-        <span class="n">String</span> <span class="n">urls</span><span class="o">[]</span> <span class="o">=</span> <span class="o">{</span> <span class="s">&quot;www.google.com/&quot;</span><span class="o">,</span> <span class="s">&quot;www.google.com&quot;</span><span class="o">,</span>
-                <span class="s">&quot;http://www.yahoo.com&quot;</span><span class="o">,</span> <span class="s">&quot;www.yahoo.com/&quot;</span><span class="o">,</span> <span class="s">&quot;www.amazon.com&quot;</span><span class="o">,</span>
-                <span class="s">&quot;www.amazon.com/page1.php&quot;</span><span class="o">,</span> <span class="s">&quot;www.amazon.com/page2.php&quot;</span><span class="o">,</span>
-                <span class="s">&quot;www.flipkart.in&quot;</span><span class="o">,</span> <span class="s">&quot;www.rediff.com&quot;</span><span class="o">,</span> <span class="s">&quot;www.techmeme.com&quot;</span><span class="o">,</span>
-                <span class="s">&quot;www.techcrunch.com&quot;</span><span class="o">,</span> <span class="s">&quot;www.lifehacker.com&quot;</span><span class="o">,</span> <span class="s">&quot;www.icicibank.com&quot;</span> <span class="o">};</span>
-
-        <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">urls</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span> <span class="o">{</span>
-            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;URL:&quot;</span> <span class="o">+</span> <span class="n">urls</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+</span> <span class="s">&quot;\tTiny: &quot;</span>
-                    <span class="o">+</span> <span class="n">u</span><span class="o">.</span><span class="na">shortenURL</span><span class="o">(</span><span class="n">urls</span><span class="o">[</span><span class="n">i</span><span class="o">])</span> <span class="o">+</span> <span class="s">&quot;\tExpanded: &quot;</span>
-                    <span class="o">+</span> <span class="n">u</span><span class="o">.</span><span class="na">expandURL</span><span class="o">(</span><span class="n">u</span><span class="o">.</span><span class="na">shortenURL</span><span class="o">(</span><span class="n">urls</span><span class="o">[</span><span class="n">i</span><span class="o">])));</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>                </article>
+<p>In <a href="https://tan-man-dhan.com/category/investing.html">Investing</a>.</p>
+<p>tags: <a href="https://tan-man-dhan.com/tag/coding.html">coding</a> <a href="https://tan-man-dhan.com/tag/java.html">java</a> <a href="https://tan-man-dhan.com/tag/url-shortener.html">url shortener</a> </p>
+</footer><!-- /.post-info --><ol>
+<li>Do you have some money saved for emergency?</li>
+<li>Have you thought about what will happen to your family, just incase you are not around them tomorrow? </li>
+<li>Do you know how much money you really earn? </li>
+<li>Do you know where will you need money in future? </li>
+</ol>                </article>
             </aside><!-- /#featured -->
         <section id="extras" class="body">
                 <div class="blogroll">
                         <h2>links</h2>
                         <ul>
-                            <li><a href="/resume.html">Resume</a></li>
-                            <li><a href="/journal.html">Journal</a></li>
-                            <li><a href="/todo.html">ToDo</a></li>
+                            <li><a href="/about.html">About</a></li>
+                            <li><a href="/contact.html">Contact</a></li>
                         </ul>
                 </div><!-- /.blogroll -->
                 <div class="social">
