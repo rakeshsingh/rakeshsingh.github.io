@@ -2,7 +2,7 @@ name: Hugo Deploy
 on:
   push:
     branches:
-      - gh-pages # Or your main branch (e.g., master)
+      - master # Or your main branch (e.g., master)
   workflow_dispatch:
 jobs:
   deploy:
