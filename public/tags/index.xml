@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Rakesh Singh</title>
+    <link>http://localhost:1313/tags/</link>
+    <description>Recent content in Tags on Rakesh Singh</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>Copyright © 2020, Rakesh Singh.</copyright>
+    <lastBuildDate>Sat, 04 Jan 2020 00:10:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Basics</title>
+      <link>http://localhost:1313/tags/basics/</link>
+      <pubDate>Sat, 04 Jan 2020 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/basics/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Investing</title>
+      <link>http://localhost:1313/tags/investing/</link>
+      <pubDate>Sat, 04 Jan 2020 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/investing/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Calculators</title>
+      <link>http://localhost:1313/tags/calculators/</link>
+      <pubDate>Thu, 02 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/calculators/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Excel</title>
+      <link>http://localhost:1313/tags/excel/</link>
+      <pubDate>Thu, 02 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/excel/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Payslip</title>
+      <link>http://localhost:1313/tags/payslip/</link>
+      <pubDate>Mon, 01 Apr 2019 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/payslip/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Salary</title>
+      <link>http://localhost:1313/tags/salary/</link>
+      <pubDate>Mon, 01 Apr 2019 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/salary/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Coding</title>
+      <link>http://localhost:1313/tags/coding/</link>
+      <pubDate>Fri, 03 Aug 2018 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/coding/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Python</title>
+      <link>http://localhost:1313/tags/python/</link>
+      <pubDate>Fri, 03 Aug 2018 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/python/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title>Blogging</title>
+      <link>http://localhost:1313/tags/blogging/</link>
+      <pubDate>Thu, 02 Aug 2018 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/tags/blogging/</guid>
+      <description></description>
+    </item>
+  </channel>
+</rss>

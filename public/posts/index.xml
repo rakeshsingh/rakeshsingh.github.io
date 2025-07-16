@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Rakesh Singh</title>
+    <link>http://localhost:1313/posts/</link>
+    <description>Recent content in Posts on Rakesh Singh</description>
+    <generator>Hugo</generator>
+    <language>en-us</language>
+    <copyright>Copyright © 2020, Rakesh Singh.</copyright>
+    <lastBuildDate>Tue, 15 Jul 2025 13:00:00 +0000</lastBuildDate>
+    <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Meetings</title>
+      <link>http://localhost:1313/posts/meetings/</link>
+      <pubDate>Tue, 15 Jul 2025 13:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/meetings/</guid>
+      <description>&lt;p&gt;interesting insights&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://medium.learningbyshipping.com/reaching-peak-meeting-efficiency-f8e47c93317a&#34;&gt;https://medium.learningbyshipping.com/reaching-peak-meeting-efficiency-f8e47c93317a&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+    <item>
+      <title>Day One Of Personal Finance</title>
+      <link>http://localhost:1313/posts/day-one/</link>
+      <pubDate>Sat, 04 Jan 2020 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/day-one/</guid>
+      <description>Day One Of Personal Finance</description>
+    </item>
+    <item>
+      <title>Investing Tools</title>
+      <link>http://localhost:1313/posts/investing-tools/</link>
+      <pubDate>Thu, 02 Jan 2020 00:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/investing-tools/</guid>
+      <description>&lt;p&gt;This page contains different tools that you can use for your investing needs.&lt;/p&gt;&#xA;&lt;h3 id=&#34;budgeting&#34;&gt;Budgeting&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;Mint&lt;/li&gt;&#xA;&lt;li&gt;YNAB&lt;/li&gt;&#xA;&lt;/ul&gt;&#xA;&lt;h3 id=&#34;investment-tracking&#34;&gt;Investment Tracking&lt;/h3&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://www.perosnalcapital.com&#34;&gt;Personal Capital&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;Wealthfront&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+    <item>
+      <title>How Much Money You (Really) Earn</title>
+      <link>http://localhost:1313/posts/how-much-money-you-earn/</link>
+      <pubDate>Mon, 01 Apr 2019 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/how-much-money-you-earn/</guid>
+      <description>How Much Money You Really Earn</description>
+    </item>
+    <item>
+      <title>Another Post</title>
+      <link>http://localhost:1313/posts/another-post/</link>
+      <pubDate>Fri, 03 Aug 2018 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/another-post/</guid>
+      <description>&lt;p&gt;another post. Testing the code addition&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;1&lt;/span&gt;&lt;span&gt;&lt;span style=&#34;color:#60a0b0;font-style:italic&#34;&gt;#!/usr/bin/python&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;2&lt;/span&gt;&lt;span&gt;&lt;span style=&#34;color:#007020;font-weight:bold&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#007020;font-weight:bold&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#007020&#34;&gt;range&lt;/span&gt;(&lt;span style=&#34;color:#40a070&#34;&gt;10&lt;/span&gt;):&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;3&lt;/span&gt;&lt;span&gt;    &lt;span style=&#34;color:#007020&#34;&gt;print&lt;/span&gt;(i)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;4&lt;/span&gt;&lt;span&gt;myprint &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#007020;font-weight:bold&#34;&gt;lambda&lt;/span&gt; x: &lt;span style=&#34;color:#007020&#34;&gt;print&lt;/span&gt;(x)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;5&lt;/span&gt;&lt;span&gt;&lt;span style=&#34;color:#007020&#34;&gt;map&lt;/span&gt;(myprint, &lt;span style=&#34;color:#007020&#34;&gt;range&lt;/span&gt;(&lt;span style=&#34;color:#40a070&#34;&gt;10&lt;/span&gt;))&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+    </item>
+    <item>
+      <title>First Post</title>
+      <link>http://localhost:1313/posts/first-post/</link>
+      <pubDate>Thu, 02 Aug 2018 00:10:00 +0000</pubDate>
+      <guid>http://localhost:1313/posts/first-post/</guid>
+      <description>&lt;p&gt;first post using pelican&lt;/p&gt;</description>
+    </item>
+  </channel>
+</rss>
