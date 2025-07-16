@@ -2,18 +2,18 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Python on Rakesh Singh</title>
-    <link>https://rakeshsingh.github.io/blog/python/</link>
+    <link>http://localhost:1313/blog/python/</link>
     <description>Recent content in Python on Rakesh Singh</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Copyright © 2020, Rakesh Singh.</copyright>
     <lastBuildDate>Fri, 03 Aug 2018 00:10:00 +0000</lastBuildDate>
-    <atom:link href="https://rakeshsingh.github.io/blog/python/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/blog/python/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Another Post</title>
-      <link>https://rakeshsingh.github.io/another-post/</link>
+      <link>http://localhost:1313/another-post/</link>
       <pubDate>Fri, 03 Aug 2018 00:10:00 +0000</pubDate>
-      <guid>https://rakeshsingh.github.io/another-post/</guid>
+      <guid>http://localhost:1313/another-post/</guid>
       <description>&lt;p&gt;another post. Testing the code addition&lt;/p&gt;&#xA;&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; style=&#34;background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;1&lt;/span&gt;&lt;span&gt;&lt;span style=&#34;color:#60a0b0;font-style:italic&#34;&gt;#!/usr/bin/python&lt;/span&gt;&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;2&lt;/span&gt;&lt;span&gt;&lt;span style=&#34;color:#007020;font-weight:bold&#34;&gt;for&lt;/span&gt; i &lt;span style=&#34;color:#007020;font-weight:bold&#34;&gt;in&lt;/span&gt; &lt;span style=&#34;color:#007020&#34;&gt;range&lt;/span&gt;(&lt;span style=&#34;color:#40a070&#34;&gt;10&lt;/span&gt;):&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;3&lt;/span&gt;&lt;span&gt;    &lt;span style=&#34;color:#007020&#34;&gt;print&lt;/span&gt;(i)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;4&lt;/span&gt;&lt;span&gt;myprint &lt;span style=&#34;color:#666&#34;&gt;=&lt;/span&gt; &lt;span style=&#34;color:#007020;font-weight:bold&#34;&gt;lambda&lt;/span&gt; x: &lt;span style=&#34;color:#007020&#34;&gt;print&lt;/span&gt;(x)&#xA;&lt;/span&gt;&lt;/span&gt;&lt;span style=&#34;display:flex;&#34;&gt;&lt;span style=&#34;white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f&#34;&gt;5&lt;/span&gt;&lt;span&gt;&lt;span style=&#34;color:#007020&#34;&gt;map&lt;/span&gt;(myprint, &lt;span style=&#34;color:#007020&#34;&gt;range&lt;/span&gt;(&lt;span style=&#34;color:#40a070&#34;&gt;10&lt;/span&gt;))&#xA;&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
     </item>
   </channel>
