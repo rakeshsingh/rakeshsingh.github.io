@@ -1,4 +1,5 @@
 baseURL = 'https://rakeshsingh.github.io/'
+publishDir = 'public'
 title = 'Rakesh Singh'
 theme = 'hugo-bearblog'
 author = "Rakesh Singh"
