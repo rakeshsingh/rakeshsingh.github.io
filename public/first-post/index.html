@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+  <meta http-equiv="X-Clacks-Overhead" content="GNU Terry Pratchett" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="shortcut icon" href="https://rakeshsingh.github.io/images/favicon.png" />
+<title>URL Shortner in Java | Rakesh Singh</title>
+<meta name="title" content="URL Shortner in Java" />
+<meta name="description" content="Wrote this code some time back for a programming interview, sharing it for everyone&rsquo;s use. Its a 64 character encoded URL shortener code written in java. The code does not use any database backend but can be easily modified to support that.
+  1package testjava;
+  2
+  3import java.util.HashMap;
+  4import java.util.Random;
+  5
+  6/*
+  7 * URL Shortener
+  8 */
+  9public class URLShortener {
+ 10    // storage for generated keys
+ 11    private HashMap&lt;String, String&gt; keyMap; // key-url map
+ 12    private HashMap&lt;String, String&gt; valueMap;// url-key map to quickly check
+ 13                                                // whether an url is
+ 14    // already entered in our system
+ 15    private String domain; // Use this attribute to generate urls for a custom
+ 16                            // domain name defaults to http://fkt.in
+ 17    private char myChars[]; // This array is used for character to number
+ 18                            // mapping
+ 19    private Random myRand; // Random object used to generate random integers
+ 20    private int keyLength; // the key length in URL defaults to 8
+ 21
+ 22    // Default Constructor
+ 23    URLShortener() {
+ 24        keyMap = new HashMap&lt;String, String&gt;();
+ 25        valueMap = new HashMap&lt;String, String&gt;();
+ 26        myRand = new Random();
+ 27        keyLength = 8;
+ 28        myChars = new char[62];
+ 29        for (int i = 0; i &lt; 62; i&#43;&#43;) {
+ 30            int j = 0;
+ 31            if (i &lt; 10) {
+ 32                j = i &#43; 48;
+ 33            } else if (i &gt; 9 &amp;&amp; i &lt;= 35) {
+ 34                j = i &#43; 55;
+ 35            } else {
+ 36                j = i &#43; 61;
+ 37            }
+ 38            myChars[i] = (char) j;
+ 39        }
+ 40        domain = &#34;http://fkt.in&#34;;
+ 41    }
+ 42
+ 43    // Constructor which enables you to define tiny URL key length and base URL
+ 44    // name
+ 45    URLShortener(int length, String newDomain) {
+ 46        this();
+ 47        this.keyLength = length;
+ 48        if (!newDomain.isEmpty()) {
+ 49            newDomain = sanitizeURL(newDomain);
+ 50            domain = newDomain;
+ 51        }
+ 52    }
+ 53
+ 54    // shortenURL
+ 55    // the public method which can be called to shorten a given URL
+ 56    public String shortenURL(String longURL) {
+ 57        String shortURL = &#34;&#34;;
+ 58        if (validateURL(longURL)) {
+ 59            longURL = sanitizeURL(longURL);
+ 60            if (valueMap.containsKey(longURL)) {
+ 61                shortURL = domain &#43; &#34;/&#34; &#43; valueMap.get(longURL);
+ 62            } else {
+ 63                shortURL = domain &#43; &#34;/&#34; &#43; getKey(longURL);
+ 64            }
+ 65        }
+ 66        // add http part
+ 67        return shortURL;
+ 68    }
+ 69
+ 70    // expandURL
+ 71    // public method which returns back the original URL given the shortened url
+ 72    public String expandURL(String shortURL) {
+ 73        String longURL = &#34;&#34;;
+ 74        String key = shortURL.substring(domain.length() &#43; 1);
+ 75        longURL = keyMap.get(key);
+ 76        return longURL;
+ 77    }
+ 78
+ 79    // Validate URL
+ 80    // not implemented, but should be implemented to check whether the given URL
+ 81    // is valid or not
+ 82    boolean validateURL(String url) {
+ 83        return true;
+ 84    }
+ 85
+ 86    // sanitizeURL
+ 87    // This method should take care various issues with a valid url
+ 88    // e.g. www.google.com,www.google.com/, http://www.google.com,
+ 89    // http://www.google.com/
+ 90    // all the above URL should point to same shortened URL
+ 91    // There could be several other cases like these.
+ 92    String sanitizeURL(String url) {
+ 93        if (url.substring(0, 7).equals(&#34;http://&#34;))
+ 94            url = url.substring(7);
+ 95
+ 96        if (url.substring(0, 8).equals(&#34;https://&#34;))
+ 97            url = url.substring(8);
+ 98
+ 99        if (url.charAt(url.length() - 1) == &#39;/&#39;)
+100            url = url.substring(0, url.length() - 1);
+101        return url;
+102    }
+103
+104    /*
+105     * Get Key method
+106     */
+107    private String getKey(String longURL) {
+108        String key;
+109        key = generateKey();
+110        keyMap.put(key, longURL);
+111        valueMap.put(longURL, key);
+112        return key;
+113    }
+114
+115    // generateKey
+116    private String generateKey() {
+117        String key = &#34;&#34;;
+118        boolean flag = true;
+119        while (flag) {
+120            key = &#34;&#34;;
+121            for (int i = 0; i &lt;= keyLength; i&#43;&#43;) {
+122                key &#43;= myChars[myRand.nextInt(62)];
+123            }
+124            // System.out.println(&#34;Iteration: &#34;&#43; counter &#43; &#34;Key: &#34;&#43; key);
+125            if (!keyMap.containsKey(key)) {
+126                flag = false;
+127            }
+128        }
+129        return key;
+130    }
+131
+132    // test the code
+133    public static void main(String args[]) {
+134        URLShortener u = new URLShortener(5, &#34;www.tinyurl.com/&#34;);
+135        String urls[] = { &#34;www.google.com/&#34;, &#34;www.google.com&#34;,
+136                &#34;http://www.yahoo.com&#34;, &#34;www.yahoo.com/&#34;, &#34;www.amazon.com&#34;,
+137                &#34;www.amazon.com/page1.php&#34;, &#34;www.amazon.com/page2.php&#34;,
+138                &#34;www.flipkart.in&#34;, &#34;www.rediff.com&#34;, &#34;www.techmeme.com&#34;,
+139                &#34;www.techcrunch.com&#34;, &#34;www.lifehacker.com&#34;, &#34;www.icicibank.com&#34; };
+140
+141        for (int i = 0; i &lt; urls.length; i&#43;&#43;) {
+142            System.out.println(&#34;URL:&#34; &#43; urls[i] &#43; &#34;\tTiny: &#34;
+143                    &#43; u.shortenURL(urls[i]) &#43; &#34;\tExpanded: &#34;
+144                    &#43; u.expandURL(u.shortenURL(urls[i])));
+145        }
+146    }
+147}
+" />
+<meta name="keywords" content="coding,url," />
+
+
+<meta property="og:url" content="https://rakeshsingh.github.io/first-post/">
+  <meta property="og:site_name" content="Rakesh Singh">
+  <meta property="og:title" content="URL Shortner in Java">
+  <meta property="og:description" content="Wrote this code some time back for a programming interview, sharing it for everyone’s use. Its a 64 character encoded URL shortener code written in java. The code does not use any database backend but can be easily modified to support that.
+1package testjava; 2 3import java.util.HashMap; 4import java.util.Random; 5 6/* 7 * URL Shortener 8 */ 9public class URLShortener { 10 // storage for generated keys 11 private HashMap&lt;String, String&gt; keyMap; // key-url map 12 private HashMap&lt;String, String&gt; valueMap;// url-key map to quickly check 13 // whether an url is 14 // already entered in our system 15 private String domain; // Use this attribute to generate urls for a custom 16 // domain name defaults to http://fkt.in 17 private char myChars[]; // This array is used for character to number 18 // mapping 19 private Random myRand; // Random object used to generate random integers 20 private int keyLength; // the key length in URL defaults to 8 21 22 // Default Constructor 23 URLShortener() { 24 keyMap = new HashMap&lt;String, String&gt;(); 25 valueMap = new HashMap&lt;String, String&gt;(); 26 myRand = new Random(); 27 keyLength = 8; 28 myChars = new char[62]; 29 for (int i = 0; i &lt; 62; i&#43;&#43;) { 30 int j = 0; 31 if (i &lt; 10) { 32 j = i &#43; 48; 33 } else if (i &gt; 9 &amp;&amp; i &lt;= 35) { 34 j = i &#43; 55; 35 } else { 36 j = i &#43; 61; 37 } 38 myChars[i] = (char) j; 39 } 40 domain = &#34;http://fkt.in&#34;; 41 } 42 43 // Constructor which enables you to define tiny URL key length and base URL 44 // name 45 URLShortener(int length, String newDomain) { 46 this(); 47 this.keyLength = length; 48 if (!newDomain.isEmpty()) { 49 newDomain = sanitizeURL(newDomain); 50 domain = newDomain; 51 } 52 } 53 54 // shortenURL 55 // the public method which can be called to shorten a given URL 56 public String shortenURL(String longURL) { 57 String shortURL = &#34;&#34;; 58 if (validateURL(longURL)) { 59 longURL = sanitizeURL(longURL); 60 if (valueMap.containsKey(longURL)) { 61 shortURL = domain &#43; &#34;/&#34; &#43; valueMap.get(longURL); 62 } else { 63 shortURL = domain &#43; &#34;/&#34; &#43; getKey(longURL); 64 } 65 } 66 // add http part 67 return shortURL; 68 } 69 70 // expandURL 71 // public method which returns back the original URL given the shortened url 72 public String expandURL(String shortURL) { 73 String longURL = &#34;&#34;; 74 String key = shortURL.substring(domain.length() &#43; 1); 75 longURL = keyMap.get(key); 76 return longURL; 77 } 78 79 // Validate URL 80 // not implemented, but should be implemented to check whether the given URL 81 // is valid or not 82 boolean validateURL(String url) { 83 return true; 84 } 85 86 // sanitizeURL 87 // This method should take care various issues with a valid url 88 // e.g. www.google.com,www.google.com/, http://www.google.com, 89 // http://www.google.com/ 90 // all the above URL should point to same shortened URL 91 // There could be several other cases like these. 92 String sanitizeURL(String url) { 93 if (url.substring(0, 7).equals(&#34;http://&#34;)) 94 url = url.substring(7); 95 96 if (url.substring(0, 8).equals(&#34;https://&#34;)) 97 url = url.substring(8); 98 99 if (url.charAt(url.length() - 1) == &#39;/&#39;) 100 url = url.substring(0, url.length() - 1); 101 return url; 102 } 103 104 /* 105 * Get Key method 106 */ 107 private String getKey(String longURL) { 108 String key; 109 key = generateKey(); 110 keyMap.put(key, longURL); 111 valueMap.put(longURL, key); 112 return key; 113 } 114 115 // generateKey 116 private String generateKey() { 117 String key = &#34;&#34;; 118 boolean flag = true; 119 while (flag) { 120 key = &#34;&#34;; 121 for (int i = 0; i &lt;= keyLength; i&#43;&#43;) { 122 key &#43;= myChars[myRand.nextInt(62)]; 123 } 124 // System.out.println(&#34;Iteration: &#34;&#43; counter &#43; &#34;Key: &#34;&#43; key); 125 if (!keyMap.containsKey(key)) { 126 flag = false; 127 } 128 } 129 return key; 130 } 131 132 // test the code 133 public static void main(String args[]) { 134 URLShortener u = new URLShortener(5, &#34;www.tinyurl.com/&#34;); 135 String urls[] = { &#34;www.google.com/&#34;, &#34;www.google.com&#34;, 136 &#34;http://www.yahoo.com&#34;, &#34;www.yahoo.com/&#34;, &#34;www.amazon.com&#34;, 137 &#34;www.amazon.com/page1.php&#34;, &#34;www.amazon.com/page2.php&#34;, 138 &#34;www.flipkart.in&#34;, &#34;www.rediff.com&#34;, &#34;www.techmeme.com&#34;, 139 &#34;www.techcrunch.com&#34;, &#34;www.lifehacker.com&#34;, &#34;www.icicibank.com&#34; }; 140 141 for (int i = 0; i &lt; urls.length; i&#43;&#43;) { 142 System.out.println(&#34;URL:&#34; &#43; urls[i] &#43; &#34;\tTiny: &#34; 143 &#43; u.shortenURL(urls[i]) &#43; &#34;\tExpanded: &#34; 144 &#43; u.expandURL(u.shortenURL(urls[i]))); 145 } 146 } 147}">
+  <meta property="og:locale" content="en_us">
+  <meta property="og:type" content="article">
+    <meta property="article:section" content="blog">
+    <meta property="article:published_time" content="2010-08-02T00:10:00+00:00">
+    <meta property="article:modified_time" content="2010-08-02T00:10:00+00:00">
+    <meta property="article:tag" content="Coding">
+    <meta property="article:tag" content="Url">
+    <meta property="og:image" content="https://rakeshsingh.github.io/images/share.png">
+
+
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://rakeshsingh.github.io/images/share.png">
+  <meta name="twitter:title" content="URL Shortner in Java">
+  <meta name="twitter:description" content="Wrote this code some time back for a programming interview, sharing it for everyone’s use. Its a 64 character encoded URL shortener code written in java. The code does not use any database backend but can be easily modified to support that.
+1package testjava; 2 3import java.util.HashMap; 4import java.util.Random; 5 6/* 7 * URL Shortener 8 */ 9public class URLShortener { 10 // storage for generated keys 11 private HashMap&lt;String, String&gt; keyMap; // key-url map 12 private HashMap&lt;String, String&gt; valueMap;// url-key map to quickly check 13 // whether an url is 14 // already entered in our system 15 private String domain; // Use this attribute to generate urls for a custom 16 // domain name defaults to http://fkt.in 17 private char myChars[]; // This array is used for character to number 18 // mapping 19 private Random myRand; // Random object used to generate random integers 20 private int keyLength; // the key length in URL defaults to 8 21 22 // Default Constructor 23 URLShortener() { 24 keyMap = new HashMap&lt;String, String&gt;(); 25 valueMap = new HashMap&lt;String, String&gt;(); 26 myRand = new Random(); 27 keyLength = 8; 28 myChars = new char[62]; 29 for (int i = 0; i &lt; 62; i&#43;&#43;) { 30 int j = 0; 31 if (i &lt; 10) { 32 j = i &#43; 48; 33 } else if (i &gt; 9 &amp;&amp; i &lt;= 35) { 34 j = i &#43; 55; 35 } else { 36 j = i &#43; 61; 37 } 38 myChars[i] = (char) j; 39 } 40 domain = &#34;http://fkt.in&#34;; 41 } 42 43 // Constructor which enables you to define tiny URL key length and base URL 44 // name 45 URLShortener(int length, String newDomain) { 46 this(); 47 this.keyLength = length; 48 if (!newDomain.isEmpty()) { 49 newDomain = sanitizeURL(newDomain); 50 domain = newDomain; 51 } 52 } 53 54 // shortenURL 55 // the public method which can be called to shorten a given URL 56 public String shortenURL(String longURL) { 57 String shortURL = &#34;&#34;; 58 if (validateURL(longURL)) { 59 longURL = sanitizeURL(longURL); 60 if (valueMap.containsKey(longURL)) { 61 shortURL = domain &#43; &#34;/&#34; &#43; valueMap.get(longURL); 62 } else { 63 shortURL = domain &#43; &#34;/&#34; &#43; getKey(longURL); 64 } 65 } 66 // add http part 67 return shortURL; 68 } 69 70 // expandURL 71 // public method which returns back the original URL given the shortened url 72 public String expandURL(String shortURL) { 73 String longURL = &#34;&#34;; 74 String key = shortURL.substring(domain.length() &#43; 1); 75 longURL = keyMap.get(key); 76 return longURL; 77 } 78 79 // Validate URL 80 // not implemented, but should be implemented to check whether the given URL 81 // is valid or not 82 boolean validateURL(String url) { 83 return true; 84 } 85 86 // sanitizeURL 87 // This method should take care various issues with a valid url 88 // e.g. www.google.com,www.google.com/, http://www.google.com, 89 // http://www.google.com/ 90 // all the above URL should point to same shortened URL 91 // There could be several other cases like these. 92 String sanitizeURL(String url) { 93 if (url.substring(0, 7).equals(&#34;http://&#34;)) 94 url = url.substring(7); 95 96 if (url.substring(0, 8).equals(&#34;https://&#34;)) 97 url = url.substring(8); 98 99 if (url.charAt(url.length() - 1) == &#39;/&#39;) 100 url = url.substring(0, url.length() - 1); 101 return url; 102 } 103 104 /* 105 * Get Key method 106 */ 107 private String getKey(String longURL) { 108 String key; 109 key = generateKey(); 110 keyMap.put(key, longURL); 111 valueMap.put(longURL, key); 112 return key; 113 } 114 115 // generateKey 116 private String generateKey() { 117 String key = &#34;&#34;; 118 boolean flag = true; 119 while (flag) { 120 key = &#34;&#34;; 121 for (int i = 0; i &lt;= keyLength; i&#43;&#43;) { 122 key &#43;= myChars[myRand.nextInt(62)]; 123 } 124 // System.out.println(&#34;Iteration: &#34;&#43; counter &#43; &#34;Key: &#34;&#43; key); 125 if (!keyMap.containsKey(key)) { 126 flag = false; 127 } 128 } 129 return key; 130 } 131 132 // test the code 133 public static void main(String args[]) { 134 URLShortener u = new URLShortener(5, &#34;www.tinyurl.com/&#34;); 135 String urls[] = { &#34;www.google.com/&#34;, &#34;www.google.com&#34;, 136 &#34;http://www.yahoo.com&#34;, &#34;www.yahoo.com/&#34;, &#34;www.amazon.com&#34;, 137 &#34;www.amazon.com/page1.php&#34;, &#34;www.amazon.com/page2.php&#34;, 138 &#34;www.flipkart.in&#34;, &#34;www.rediff.com&#34;, &#34;www.techmeme.com&#34;, 139 &#34;www.techcrunch.com&#34;, &#34;www.lifehacker.com&#34;, &#34;www.icicibank.com&#34; }; 140 141 for (int i = 0; i &lt; urls.length; i&#43;&#43;) { 142 System.out.println(&#34;URL:&#34; &#43; urls[i] &#43; &#34;\tTiny: &#34; 143 &#43; u.shortenURL(urls[i]) &#43; &#34;\tExpanded: &#34; 144 &#43; u.expandURL(u.shortenURL(urls[i]))); 145 } 146 } 147}">
+
+
+
+
+  <meta itemprop="name" content="URL Shortner in Java">
+  <meta itemprop="description" content="Wrote this code some time back for a programming interview, sharing it for everyone’s use. Its a 64 character encoded URL shortener code written in java. The code does not use any database backend but can be easily modified to support that.
+1package testjava; 2 3import java.util.HashMap; 4import java.util.Random; 5 6/* 7 * URL Shortener 8 */ 9public class URLShortener { 10 // storage for generated keys 11 private HashMap&lt;String, String&gt; keyMap; // key-url map 12 private HashMap&lt;String, String&gt; valueMap;// url-key map to quickly check 13 // whether an url is 14 // already entered in our system 15 private String domain; // Use this attribute to generate urls for a custom 16 // domain name defaults to http://fkt.in 17 private char myChars[]; // This array is used for character to number 18 // mapping 19 private Random myRand; // Random object used to generate random integers 20 private int keyLength; // the key length in URL defaults to 8 21 22 // Default Constructor 23 URLShortener() { 24 keyMap = new HashMap&lt;String, String&gt;(); 25 valueMap = new HashMap&lt;String, String&gt;(); 26 myRand = new Random(); 27 keyLength = 8; 28 myChars = new char[62]; 29 for (int i = 0; i &lt; 62; i&#43;&#43;) { 30 int j = 0; 31 if (i &lt; 10) { 32 j = i &#43; 48; 33 } else if (i &gt; 9 &amp;&amp; i &lt;= 35) { 34 j = i &#43; 55; 35 } else { 36 j = i &#43; 61; 37 } 38 myChars[i] = (char) j; 39 } 40 domain = &#34;http://fkt.in&#34;; 41 } 42 43 // Constructor which enables you to define tiny URL key length and base URL 44 // name 45 URLShortener(int length, String newDomain) { 46 this(); 47 this.keyLength = length; 48 if (!newDomain.isEmpty()) { 49 newDomain = sanitizeURL(newDomain); 50 domain = newDomain; 51 } 52 } 53 54 // shortenURL 55 // the public method which can be called to shorten a given URL 56 public String shortenURL(String longURL) { 57 String shortURL = &#34;&#34;; 58 if (validateURL(longURL)) { 59 longURL = sanitizeURL(longURL); 60 if (valueMap.containsKey(longURL)) { 61 shortURL = domain &#43; &#34;/&#34; &#43; valueMap.get(longURL); 62 } else { 63 shortURL = domain &#43; &#34;/&#34; &#43; getKey(longURL); 64 } 65 } 66 // add http part 67 return shortURL; 68 } 69 70 // expandURL 71 // public method which returns back the original URL given the shortened url 72 public String expandURL(String shortURL) { 73 String longURL = &#34;&#34;; 74 String key = shortURL.substring(domain.length() &#43; 1); 75 longURL = keyMap.get(key); 76 return longURL; 77 } 78 79 // Validate URL 80 // not implemented, but should be implemented to check whether the given URL 81 // is valid or not 82 boolean validateURL(String url) { 83 return true; 84 } 85 86 // sanitizeURL 87 // This method should take care various issues with a valid url 88 // e.g. www.google.com,www.google.com/, http://www.google.com, 89 // http://www.google.com/ 90 // all the above URL should point to same shortened URL 91 // There could be several other cases like these. 92 String sanitizeURL(String url) { 93 if (url.substring(0, 7).equals(&#34;http://&#34;)) 94 url = url.substring(7); 95 96 if (url.substring(0, 8).equals(&#34;https://&#34;)) 97 url = url.substring(8); 98 99 if (url.charAt(url.length() - 1) == &#39;/&#39;) 100 url = url.substring(0, url.length() - 1); 101 return url; 102 } 103 104 /* 105 * Get Key method 106 */ 107 private String getKey(String longURL) { 108 String key; 109 key = generateKey(); 110 keyMap.put(key, longURL); 111 valueMap.put(longURL, key); 112 return key; 113 } 114 115 // generateKey 116 private String generateKey() { 117 String key = &#34;&#34;; 118 boolean flag = true; 119 while (flag) { 120 key = &#34;&#34;; 121 for (int i = 0; i &lt;= keyLength; i&#43;&#43;) { 122 key &#43;= myChars[myRand.nextInt(62)]; 123 } 124 // System.out.println(&#34;Iteration: &#34;&#43; counter &#43; &#34;Key: &#34;&#43; key); 125 if (!keyMap.containsKey(key)) { 126 flag = false; 127 } 128 } 129 return key; 130 } 131 132 // test the code 133 public static void main(String args[]) { 134 URLShortener u = new URLShortener(5, &#34;www.tinyurl.com/&#34;); 135 String urls[] = { &#34;www.google.com/&#34;, &#34;www.google.com&#34;, 136 &#34;http://www.yahoo.com&#34;, &#34;www.yahoo.com/&#34;, &#34;www.amazon.com&#34;, 137 &#34;www.amazon.com/page1.php&#34;, &#34;www.amazon.com/page2.php&#34;, 138 &#34;www.flipkart.in&#34;, &#34;www.rediff.com&#34;, &#34;www.techmeme.com&#34;, 139 &#34;www.techcrunch.com&#34;, &#34;www.lifehacker.com&#34;, &#34;www.icicibank.com&#34; }; 140 141 for (int i = 0; i &lt; urls.length; i&#43;&#43;) { 142 System.out.println(&#34;URL:&#34; &#43; urls[i] &#43; &#34;\tTiny: &#34; 143 &#43; u.shortenURL(urls[i]) &#43; &#34;\tExpanded: &#34; 144 &#43; u.expandURL(u.shortenURL(urls[i]))); 145 } 146 } 147}">
+  <meta itemprop="datePublished" content="2010-08-02T00:10:00+00:00">
+  <meta itemprop="dateModified" content="2010-08-02T00:10:00+00:00">
+  <meta itemprop="wordCount" content="736">
+  <meta itemprop="image" content="https://rakeshsingh.github.io/images/share.png">
+  <meta itemprop="keywords" content="Coding,Url">
+<meta name="referrer" content="no-referrer-when-downgrade" />
+
+  <style>
+  :root {
+    --width: 720px;
+    --font-main: Verdana, sans-serif;
+    --font-secondary: Verdana, sans-serif;
+    --font-scale: 1em;
+    --background-color: #fff;
+    --heading-color: #222;
+    --text-color: #444;
+    --link-color: #3273dc;
+    --visited-color: #8b6fcb;
+    --code-background-color: #f2f2f2;
+    --code-color: #222;
+    --blockquote-color: #222;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #01242e;
+      --heading-color: #eee;
+      --text-color: #ddd;
+      --link-color: #8cc2dd;
+      --visited-color: #8b6fcb;
+      --code-background-color: #000;
+      --code-color: #ddd;
+      --blockquote-color: #ccc;
+    }
+  }
+
+  body {
+    font-family: var(--font-secondary);
+    font-size: var(--font-scale);
+    margin: auto;
+    padding: 20px;
+    max-width: var(--width);
+    text-align: left;
+    background-color: var(--background-color);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.5;
+    color: var(--text-color);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-main);
+    color: var(--heading-color);
+  }
+
+  a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  nav a {
+    margin-right: 8px;
+  }
+
+  strong,
+  b {
+    color: var(--heading-color);
+  }
+
+  button {
+    margin: 0;
+    cursor: pointer;
+  }
+
+  time {
+    font-family: monospace;
+    font-style: normal;
+    font-size: 15px;
+  }
+
+  main {
+    line-height: 1.6;
+  }
+
+  table {
+    width: 100%;
+  }
+
+  hr {
+    border: 0;
+    border-top: 1px dashed;
+  }
+
+  img {
+    max-width: 100%;
+  }
+
+  code {
+    font-family: monospace;
+    padding: 2px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+  }
+
+  blockquote {
+    border-left: 1px solid #999;
+    color: var(--code-color);
+    padding-left: 20px;
+    font-style: italic;
+  }
+
+  footer {
+    padding: 25px 0;
+    text-align: center;
+  }
+
+  .title:hover {
+    text-decoration: none;
+  }
+
+  .title h1 {
+    font-size: 1.5em;
+  }
+
+  .inline {
+    width: auto !important;
+  }
+
+  .highlight,
+  .code {
+    padding: 1px 15px;
+    background-color: var(--code-background-color);
+    color: var(--code-color);
+    border-radius: 3px;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    overflow-x: auto;
+  }
+
+   
+  ul.blog-posts {
+    list-style-type: none;
+    padding: unset;
+  }
+
+  ul.blog-posts li {
+    display: flex;
+  }
+
+  ul.blog-posts li span {
+    flex: 0 0 130px;
+  }
+
+  ul.blog-posts li a:visited {
+    color: var(--visited-color);
+  }
+
+</style>
+
+</head>
+
+<body>
+  <header><a href="/" class="title">
+  <h2>Rakesh Singh</h2>
+</a>
+<nav>
+<a href="/">Home</a>
+
+<a href="/blog/">Blog</a>
+
+</nav>
+</header>
+  <main>
+
+<h1>URL Shortner in Java</h1>
+<p>
+  <i>
+    <time datetime='2010-08-02'>
+      02 Aug, 2010
+    </time>
+  </i>
+</p>
+
+<content>
+  <p>Wrote this code some time back for a programming interview, sharing it for everyone&rsquo;s use. Its a 64 character encoded URL shortener code written in java. The code does not use any database backend but can be easily modified to support that.</p>
+<div class="highlight"><pre tabindex="0" style="background-color:#f0f0f0;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-java" data-lang="java"><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  1</span><span><span style="color:#007020;font-weight:bold">package</span><span style="color:#bbb"> </span><span style="color:#0e84b5;font-weight:bold">testjava</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  2</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  3</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">import</span><span style="color:#bbb"> </span><span style="color:#0e84b5;font-weight:bold">java.util.HashMap</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  4</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">import</span><span style="color:#bbb"> </span><span style="color:#0e84b5;font-weight:bold">java.util.Random</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  5</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  6</span><span><span style="color:#bbb"></span><span style="color:#60a0b0;font-style:italic">/*
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  7</span><span><span style="color:#60a0b0;font-style:italic"> * URL Shortener
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  8</span><span><span style="color:#60a0b0;font-style:italic"> */</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">  9</span><span><span style="color:#bbb"></span><span style="color:#007020;font-weight:bold">public</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">class</span> <span style="color:#0e84b5;font-weight:bold">URLShortener</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 10</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// storage for generated keys</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 11</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">private</span><span style="color:#bbb"> </span>HashMap<span style="color:#666">&lt;</span>String,<span style="color:#bbb"> </span>String<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>keyMap;<span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic">// key-url map</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 12</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">private</span><span style="color:#bbb"> </span>HashMap<span style="color:#666">&lt;</span>String,<span style="color:#bbb"> </span>String<span style="color:#666">&gt;</span><span style="color:#bbb"> </span>valueMap;<span style="color:#60a0b0;font-style:italic">// url-key map to quickly check</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 13</span><span><span style="color:#bbb">                                                </span><span style="color:#60a0b0;font-style:italic">// whether an url is</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 14</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// already entered in our system</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 15</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">private</span><span style="color:#bbb"> </span>String<span style="color:#bbb"> </span>domain;<span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic">// Use this attribute to generate urls for a custom</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 16</span><span><span style="color:#bbb">                            </span><span style="color:#60a0b0;font-style:italic">// domain name defaults to http://fkt.in</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 17</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">private</span><span style="color:#bbb"> </span><span style="color:#902000">char</span><span style="color:#bbb"> </span>myChars<span style="color:#666">[]</span>;<span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic">// This array is used for character to number</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 18</span><span><span style="color:#bbb">                            </span><span style="color:#60a0b0;font-style:italic">// mapping</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 19</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">private</span><span style="color:#bbb"> </span>Random<span style="color:#bbb"> </span>myRand;<span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic">// Random object used to generate random integers</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 20</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">private</span><span style="color:#bbb"> </span><span style="color:#902000">int</span><span style="color:#bbb"> </span>keyLength;<span style="color:#bbb"> </span><span style="color:#60a0b0;font-style:italic">// the key length in URL defaults to 8</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 21</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 22</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// Default Constructor</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 23</span><span><span style="color:#bbb">    </span>URLShortener()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 24</span><span><span style="color:#bbb">        </span>keyMap<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">new</span><span style="color:#bbb"> </span>HashMap<span style="color:#666">&lt;</span>String,<span style="color:#bbb"> </span>String<span style="color:#666">&gt;</span>();<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 25</span><span><span style="color:#bbb">        </span>valueMap<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">new</span><span style="color:#bbb"> </span>HashMap<span style="color:#666">&lt;</span>String,<span style="color:#bbb"> </span>String<span style="color:#666">&gt;</span>();<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 26</span><span><span style="color:#bbb">        </span>myRand<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">new</span><span style="color:#bbb"> </span>Random();<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 27</span><span><span style="color:#bbb">        </span>keyLength<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>8;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 28</span><span><span style="color:#bbb">        </span>myChars<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">new</span><span style="color:#bbb"> </span><span style="color:#902000">char</span><span style="color:#666">[</span>62<span style="color:#666">]</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 29</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">for</span><span style="color:#bbb"> </span>(<span style="color:#902000">int</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>0;<span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">&lt;</span><span style="color:#bbb"> </span>62;<span style="color:#bbb"> </span>i<span style="color:#666">++</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 30</span><span><span style="color:#bbb">            </span><span style="color:#902000">int</span><span style="color:#bbb"> </span>j<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>0;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 31</span><span><span style="color:#bbb">            </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>(i<span style="color:#bbb"> </span><span style="color:#666">&lt;</span><span style="color:#bbb"> </span>10)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 32</span><span><span style="color:#bbb">                </span>j<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>48;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 33</span><span><span style="color:#bbb">            </span>}<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">else</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>(i<span style="color:#bbb"> </span><span style="color:#666">&gt;</span><span style="color:#bbb"> </span>9<span style="color:#bbb"> </span><span style="color:#666">&amp;&amp;</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">&lt;=</span><span style="color:#bbb"> </span>35)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 34</span><span><span style="color:#bbb">                </span>j<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>55;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 35</span><span><span style="color:#bbb">            </span>}<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 36</span><span><span style="color:#bbb">                </span>j<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>61;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 37</span><span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 38</span><span><span style="color:#bbb">            </span>myChars<span style="color:#666">[</span>i<span style="color:#666">]</span><span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>(<span style="color:#902000">char</span>)<span style="color:#bbb"> </span>j;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 39</span><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 40</span><span><span style="color:#bbb">        </span>domain<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;http://fkt.in&#34;</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 41</span><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 42</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 43</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// Constructor which enables you to define tiny URL key length and base URL</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 44</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// name</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 45</span><span><span style="color:#bbb">    </span>URLShortener(<span style="color:#902000">int</span><span style="color:#bbb"> </span>length,<span style="color:#bbb"> </span>String<span style="color:#bbb"> </span>newDomain)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 46</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">this</span>();<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 47</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">this</span>.<span style="color:#4070a0">keyLength</span><span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>length;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 48</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>(<span style="color:#666">!</span>newDomain.<span style="color:#4070a0">isEmpty</span>())<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 49</span><span><span style="color:#bbb">            </span>newDomain<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>sanitizeURL(newDomain);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 50</span><span><span style="color:#bbb">            </span>domain<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>newDomain;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 51</span><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 52</span><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 53</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 54</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// shortenURL</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 55</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// the public method which can be called to shorten a given URL</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 56</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">public</span><span style="color:#bbb"> </span>String<span style="color:#bbb"> </span><span style="color:#06287e">shortenURL</span>(String<span style="color:#bbb"> </span>longURL)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 57</span><span><span style="color:#bbb">        </span>String<span style="color:#bbb"> </span>shortURL<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;&#34;</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 58</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>(validateURL(longURL))<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 59</span><span><span style="color:#bbb">            </span>longURL<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>sanitizeURL(longURL);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 60</span><span><span style="color:#bbb">            </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>(valueMap.<span style="color:#4070a0">containsKey</span>(longURL))<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 61</span><span><span style="color:#bbb">                </span>shortURL<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>domain<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/&#34;</span><span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>valueMap.<span style="color:#4070a0">get</span>(longURL);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 62</span><span><span style="color:#bbb">            </span>}<span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">else</span><span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 63</span><span><span style="color:#bbb">                </span>shortURL<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>domain<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;/&#34;</span><span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>getKey(longURL);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 64</span><span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 65</span><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 66</span><span><span style="color:#bbb">        </span><span style="color:#60a0b0;font-style:italic">// add http part</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 67</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span>shortURL;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 68</span><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 69</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 70</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// expandURL</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 71</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// public method which returns back the original URL given the shortened url</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 72</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">public</span><span style="color:#bbb"> </span>String<span style="color:#bbb"> </span><span style="color:#06287e">expandURL</span>(String<span style="color:#bbb"> </span>shortURL)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 73</span><span><span style="color:#bbb">        </span>String<span style="color:#bbb"> </span>longURL<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;&#34;</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 74</span><span><span style="color:#bbb">        </span>String<span style="color:#bbb"> </span>key<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>shortURL.<span style="color:#4070a0">substring</span>(domain.<span style="color:#4070a0">length</span>()<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>1);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 75</span><span><span style="color:#bbb">        </span>longURL<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>keyMap.<span style="color:#4070a0">get</span>(key);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 76</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span>longURL;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 77</span><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 78</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 79</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// Validate URL</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 80</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// not implemented, but should be implemented to check whether the given URL</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 81</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// is valid or not</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 82</span><span><span style="color:#bbb">    </span><span style="color:#902000">boolean</span><span style="color:#bbb"> </span><span style="color:#06287e">validateURL</span>(String<span style="color:#bbb"> </span>url)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 83</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">true</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 84</span><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 85</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 86</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// sanitizeURL</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 87</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// This method should take care various issues with a valid url</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 88</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// e.g. www.google.com,www.google.com/, http://www.google.com,</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 89</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// http://www.google.com/</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 90</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// all the above URL should point to same shortened URL</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 91</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// There could be several other cases like these.</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 92</span><span><span style="color:#bbb">    </span>String<span style="color:#bbb"> </span><span style="color:#06287e">sanitizeURL</span>(String<span style="color:#bbb"> </span>url)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 93</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>(url.<span style="color:#4070a0">substring</span>(0,<span style="color:#bbb"> </span>7).<span style="color:#4070a0">equals</span>(<span style="color:#4070a0">&#34;http://&#34;</span>))<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 94</span><span><span style="color:#bbb">            </span>url<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>url.<span style="color:#4070a0">substring</span>(7);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 95</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 96</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>(url.<span style="color:#4070a0">substring</span>(0,<span style="color:#bbb"> </span>8).<span style="color:#4070a0">equals</span>(<span style="color:#4070a0">&#34;https://&#34;</span>))<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 97</span><span><span style="color:#bbb">            </span>url<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>url.<span style="color:#4070a0">substring</span>(8);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 98</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f"> 99</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>(url.<span style="color:#4070a0">charAt</span>(url.<span style="color:#4070a0">length</span>()<span style="color:#bbb"> </span><span style="color:#666">-</span><span style="color:#bbb"> </span>1)<span style="color:#bbb"> </span><span style="color:#666">==</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#39;/&#39;</span>)<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">100</span><span><span style="color:#bbb">            </span>url<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>url.<span style="color:#4070a0">substring</span>(0,<span style="color:#bbb"> </span>url.<span style="color:#4070a0">length</span>()<span style="color:#bbb"> </span><span style="color:#666">-</span><span style="color:#bbb"> </span>1);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">101</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span>url;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">102</span><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">103</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">104</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">/*
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">105</span><span><span style="color:#60a0b0;font-style:italic">     * Get Key method
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">106</span><span><span style="color:#60a0b0;font-style:italic">     */</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">107</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">private</span><span style="color:#bbb"> </span>String<span style="color:#bbb"> </span><span style="color:#06287e">getKey</span>(String<span style="color:#bbb"> </span>longURL)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">108</span><span><span style="color:#bbb">        </span>String<span style="color:#bbb"> </span>key;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">109</span><span><span style="color:#bbb">        </span>key<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>generateKey();<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">110</span><span><span style="color:#bbb">        </span>keyMap.<span style="color:#4070a0">put</span>(key,<span style="color:#bbb"> </span>longURL);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">111</span><span><span style="color:#bbb">        </span>valueMap.<span style="color:#4070a0">put</span>(longURL,<span style="color:#bbb"> </span>key);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">112</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span>key;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">113</span><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">114</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">115</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// generateKey</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">116</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">private</span><span style="color:#bbb"> </span>String<span style="color:#bbb"> </span><span style="color:#06287e">generateKey</span>()<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">117</span><span><span style="color:#bbb">        </span>String<span style="color:#bbb"> </span>key<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;&#34;</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">118</span><span><span style="color:#bbb">        </span><span style="color:#902000">boolean</span><span style="color:#bbb"> </span>flag<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">true</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">119</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">while</span><span style="color:#bbb"> </span>(flag)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">120</span><span><span style="color:#bbb">            </span>key<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;&#34;</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">121</span><span><span style="color:#bbb">            </span><span style="color:#007020;font-weight:bold">for</span><span style="color:#bbb"> </span>(<span style="color:#902000">int</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>0;<span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">&lt;=</span><span style="color:#bbb"> </span>keyLength;<span style="color:#bbb"> </span>i<span style="color:#666">++</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">122</span><span><span style="color:#bbb">                </span>key<span style="color:#bbb"> </span><span style="color:#666">+=</span><span style="color:#bbb"> </span>myChars<span style="color:#666">[</span>myRand.<span style="color:#4070a0">nextInt</span>(62)<span style="color:#666">]</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">123</span><span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">124</span><span><span style="color:#bbb">            </span><span style="color:#60a0b0;font-style:italic">// System.out.println(&#34;Iteration: &#34;+ counter + &#34;Key: &#34;+ key);</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">125</span><span><span style="color:#bbb">            </span><span style="color:#007020;font-weight:bold">if</span><span style="color:#bbb"> </span>(<span style="color:#666">!</span>keyMap.<span style="color:#4070a0">containsKey</span>(key))<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">126</span><span><span style="color:#bbb">                </span>flag<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">false</span>;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">127</span><span><span style="color:#bbb">            </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">128</span><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">129</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">return</span><span style="color:#bbb"> </span>key;<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">130</span><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">131</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">132</span><span><span style="color:#bbb">    </span><span style="color:#60a0b0;font-style:italic">// test the code</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">133</span><span><span style="color:#bbb">    </span><span style="color:#007020;font-weight:bold">public</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">static</span><span style="color:#bbb"> </span><span style="color:#902000">void</span><span style="color:#bbb"> </span><span style="color:#06287e">main</span>(String<span style="color:#bbb"> </span>args<span style="color:#666">[]</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">134</span><span><span style="color:#bbb">        </span>URLShortener<span style="color:#bbb"> </span>u<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span><span style="color:#007020;font-weight:bold">new</span><span style="color:#bbb"> </span>URLShortener(5,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.tinyurl.com/&#34;</span>);<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">135</span><span><span style="color:#bbb">        </span>String<span style="color:#bbb"> </span>urls<span style="color:#666">[]</span><span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>{<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.google.com/&#34;</span>,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.google.com&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">136</span><span><span style="color:#bbb">                </span><span style="color:#4070a0">&#34;http://www.yahoo.com&#34;</span>,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.yahoo.com/&#34;</span>,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.amazon.com&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">137</span><span><span style="color:#bbb">                </span><span style="color:#4070a0">&#34;www.amazon.com/page1.php&#34;</span>,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.amazon.com/page2.php&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">138</span><span><span style="color:#bbb">                </span><span style="color:#4070a0">&#34;www.flipkart.in&#34;</span>,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.rediff.com&#34;</span>,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.techmeme.com&#34;</span>,<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">139</span><span><span style="color:#bbb">                </span><span style="color:#4070a0">&#34;www.techcrunch.com&#34;</span>,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.lifehacker.com&#34;</span>,<span style="color:#bbb"> </span><span style="color:#4070a0">&#34;www.icicibank.com&#34;</span><span style="color:#bbb"> </span>};<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">140</span><span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">141</span><span><span style="color:#bbb">        </span><span style="color:#007020;font-weight:bold">for</span><span style="color:#bbb"> </span>(<span style="color:#902000">int</span><span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">=</span><span style="color:#bbb"> </span>0;<span style="color:#bbb"> </span>i<span style="color:#bbb"> </span><span style="color:#666">&lt;</span><span style="color:#bbb"> </span>urls.<span style="color:#4070a0">length</span>;<span style="color:#bbb"> </span>i<span style="color:#666">++</span>)<span style="color:#bbb"> </span>{<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">142</span><span><span style="color:#bbb">            </span>System.<span style="color:#4070a0">out</span>.<span style="color:#4070a0">println</span>(<span style="color:#4070a0">&#34;URL:&#34;</span><span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span>urls<span style="color:#666">[</span>i<span style="color:#666">]</span><span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;\tTiny: &#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">143</span><span><span style="color:#bbb">                    </span><span style="color:#666">+</span><span style="color:#bbb"> </span>u.<span style="color:#4070a0">shortenURL</span>(urls<span style="color:#666">[</span>i<span style="color:#666">]</span>)<span style="color:#bbb"> </span><span style="color:#666">+</span><span style="color:#bbb"> </span><span style="color:#4070a0">&#34;\tExpanded: &#34;</span><span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">144</span><span><span style="color:#bbb">                    </span><span style="color:#666">+</span><span style="color:#bbb"> </span>u.<span style="color:#4070a0">expandURL</span>(u.<span style="color:#4070a0">shortenURL</span>(urls<span style="color:#666">[</span>i<span style="color:#666">]</span>)));<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">145</span><span><span style="color:#bbb">        </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">146</span><span><span style="color:#bbb">    </span>}<span style="color:#bbb">
+</span></span></span><span style="display:flex;"><span style="white-space:pre;-webkit-user-select:none;user-select:none;margin-right:0.4em;padding:0 0.4em 0 0.4em;color:#7f7f7f">147</span><span><span style="color:#bbb"></span>}<span style="color:#bbb">
+</span></span></span></code></pre></div>
+</content>
+<p>
+  
+  <a href="https://rakeshsingh.github.io/blog/coding/">#Coding</a>
+  
+  <a href="https://rakeshsingh.github.io/blog/url/">#Url</a>
+  
+</p>
+
+  </main>
+  <footer>Made with <a href="https://github.com/janraasch/hugo-bearblog/">Hugo ʕ•ᴥ•ʔ Bear</a>
+</footer>
+
+  
+</body>
+
+</html>
