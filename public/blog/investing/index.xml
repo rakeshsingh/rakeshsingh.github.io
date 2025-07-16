@@ -2,25 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Investing on Rakesh Singh</title>
-    <link>http://localhost:1313/blog/investing/</link>
+    <link>https://rakeshsingh.github.io/blog/investing/</link>
     <description>Recent content in Investing on Rakesh Singh</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Copyright © 2020, Rakesh Singh.</copyright>
     <lastBuildDate>Sat, 04 Jan 2020 00:10:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/blog/investing/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://rakeshsingh.github.io/blog/investing/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Day One Of Personal Finance</title>
-      <link>http://localhost:1313/day-one/</link>
+      <link>https://rakeshsingh.github.io/day-one/</link>
       <pubDate>Sat, 04 Jan 2020 00:10:00 +0000</pubDate>
-      <guid>http://localhost:1313/day-one/</guid>
+      <guid>https://rakeshsingh.github.io/day-one/</guid>
       <description>Day One Of Personal Finance</description>
     </item>
     <item>
       <title>How Much Money You (Really) Earn</title>
-      <link>http://localhost:1313/how-much-money-you-earn/</link>
+      <link>https://rakeshsingh.github.io/how-much-money-you-earn/</link>
       <pubDate>Mon, 01 Apr 2019 00:10:00 +0000</pubDate>
-      <guid>http://localhost:1313/how-much-money-you-earn/</guid>
+      <guid>https://rakeshsingh.github.io/how-much-money-you-earn/</guid>
       <description>How Much Money You Really Earn</description>
     </item>
   </channel>
