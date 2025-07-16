@@ -7,8 +7,15 @@
     <generator>Hugo</generator>
     <language>en-us</language>
     <copyright>Copyright © 2020, Rakesh Singh.</copyright>
-    <lastBuildDate>Sat, 04 Jan 2020 00:10:00 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 15 Jul 2025 13:00:00 +0000</lastBuildDate>
     <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Meetings</title>
+      <link>http://localhost:1313/meetings/</link>
+      <pubDate>Tue, 15 Jul 2025 13:00:00 +0000</pubDate>
+      <guid>http://localhost:1313/meetings/</guid>
+      <description>&lt;p&gt;interesting insights&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;https://medium.learningbyshipping.com/reaching-peak-meeting-efficiency-f8e47c93317a&#34;&gt;https://medium.learningbyshipping.com/reaching-peak-meeting-efficiency-f8e47c93317a&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
     <item>
       <title>Day One Of Personal Finance</title>
       <link>http://localhost:1313/day-one/</link>

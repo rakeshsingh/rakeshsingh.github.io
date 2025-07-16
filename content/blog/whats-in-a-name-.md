@@ -1,0 +1,10 @@
+---
+title: "What's in a Name !!"
+date: 2005-10-18T08:00:54+0000
+categories: ["Random Ramblings"]
+draft: false
+---
+
+I have heard people say "Size Does Matter !!" but when it comes to names .. the typical answer would be --
+<blockquote>What's in a name?  That which we call a rose By any other name would smell as sweet. ~William Shakespeare, Romeo and Juliet</blockquote>
+Hello Mr. Shakespeare !! Where art though ?? This is 21st Century and here Names Do Matter. Hmmm, you aint gonna believe me, so I am showing you some proofs ...  If you are a Nirnimesh you are one amongst <a href="http://rakeshkumar.multiply.com/photos/hi-res/2/34.jpg">770</a> individuals on the net, and if you are a Sunil Mohan Ranta you are among <a href="http://rakeshkumar.multiply.com/photos/hi-res/2/32.jpg">114</a> such guys.. more unique names would be ... Utkarsh Khare: <a href="http://rakeshkumar.multiply.com/photos/hi-res/2/36.jpg?xurl=%2Fphotos%2Fphoto%2F2%2F36.jpg">142</a> , Jayaram Kowta: <a href="http://rakeshkumar.multiply.com/photos/hi-res/2/39.jpg">40</a>...   Thought its the end of the story !! No, here comes the Bouncer from Brett Lee, If you are a <a href="http://rakeshkumar.multiply.com/photos/hi-res/2/43.jpg">Kunal Dhabalia</a>  .. its over for you.. you cant flee. The Net has spotted you. Google Suggests that you are the only one of your kind in the World-Wide-Web.   Anyway the best part is all the above guys are my friends.. and the worst part is if you do a google search on their names, the first result is for them but in my case its <a href="http://rakeshkumar.multiply.com/photos/hi-res/2/47.jpg">41st</a> :(( ... Solution: I am planning to change my surname to Place... guess why .. Oh forget it no guesses .. just have a look <a href="http://rakeshkumar.multiply.com/photos/hi-res/2/49.jpg">here</a> :)

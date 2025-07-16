@@ -1,0 +1,9 @@
+---
+title: "Weekly Updates @ My End"
+date: 2005-10-18T08:00:53+0000
+categories: ["Life", "Random Ramblings"]
+tags: ["Movies"]
+draft: false
+---
+
+A Walk to remember : Had a loong walk of around 6 Kms .. Thanks to <a href="http://blog.360.yahoo.com/iam_pc">Sreejith</a> for reminding me to took for more human sides of our lives and thanks to Mini for the company. Well, I compensated for all the calories lost in the walk by having the exotic pizza of Pizza Hut, but thats altogether a different story.  Watched another movie : .. James ... It wasnt worth being labeled as a Factory product... I used to have some respect for RGV films but now I think he too has started compromising with the quality and started producing the usual stuffs like the ones which Bhatt Banner serves in its every movie .. A sexy hot girl .. who doesnt know/care for acting .. but is very good in showing allt the curves she has and how to find time for  a sexy bath even though she is being followed by a gang of murderers..  Still If you want to kill your time U can see this movie for two reasons:  1. To see the new angry young [super] man of Ramu. 2. For Nisha Kothari For obvious reasons.   Progress on work front :        Progress Report :       Conclusion   > Finished with the firs enhancement given to me  ---> I am Lazy > Talked to HQ collegues ---> My accent sucks :( > Attended treat given by Sharmila [My Collegue]: --->  Everbody should buy a car and give treat to their collegues  Thats it for the time being .. oh yeah one more thing .. registered myself for the guitar classes in IIIT :) lets see If I can come on Sunday Mornings to attend the classes..
